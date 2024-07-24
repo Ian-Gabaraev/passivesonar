@@ -24,10 +24,17 @@ def init_screen():
 
 
 @app.task
+def display_device_name(device_name):
+    task = json.dumps(('display_device_name', device_name))
+    r.publish('pygame_commands', task)
+    return f"Device name displayed: {device_name}"
+
+
+@app.task
 def analyze(rms):
     task = json.dumps(('analyze', rms))
     r.publish('pygame_commands', task)
-    return "Analysis initiated"
+    return "RMS Analysis completed"
 
 
 @app.task

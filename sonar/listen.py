@@ -1,7 +1,7 @@
 import pyaudio
 import numpy as np
 import matplotlib.pyplot as plt
-from celeryapps import init_screen, analyze, draw_circle
+from celeryapps import init_screen, analyze, draw_circle, display_device_name
 
 
 def plot(rms_values):
@@ -27,6 +27,8 @@ def process_audio():
     rms_values = []
 
     p = pyaudio.PyAudio()
+    device_name = p.get_device_info_by_index(3)['name']
+    display_device_name.delay(device_name)
 
     stream = p.open(
         format=FORMAT,
@@ -48,7 +50,7 @@ def process_audio():
         rms_for_analysis.append(float(rms))
 
         if len(rms_for_analysis) == 10:
-            print("Sending RMS values for analysis", rms_for_analysis)
+            print("Relaying chunk of 10 median RMS: ", np.mean(rms_for_analysis))
             analyze.delay(rms_for_analysis)
             rms_for_analysis.clear()
 
