@@ -57,6 +57,13 @@ class ScreenProcess:
 
         self.screen.blit(text_surface, text_rect)
 
+    def display_status(self, color):
+        font = pygame.font.Font(None, 60)
+        text_surface = font.render(f"NOISE REGISTERED", True, color)
+        text_rect = text_surface.get_rect()
+        text_rect.center = (self.screen.get_height() // 2, self.screen.get_width() // 2)
+        self.screen.blit(text_surface, text_rect)
+
     def display_time(self):
         font = pygame.font.Font(None, 30)  # None uses the default font, 50 is the size
         text_surface = font.render(f"Time Elapsed: {self.get_elapsed_time():.2f} minutes", True, 'green')
@@ -69,21 +76,28 @@ class ScreenProcess:
         self.chunks += len(rms_values)
         for rms in rms_values:
             if rms > 250:
-                pygame.draw.circle(self.screen, 'red', (400, 300), 50)
+                # pygame.draw.circle(self.screen, 'red', (400, 300), 50)
+                self.display_status('red')
                 self.alert_fired = time.time()
                 self.alert_message = "ALERT: Loud Noise Detected"
             elif rms > 200:
-                pygame.draw.circle(self.screen, 'orange', (400, 300), 50)
+                self.display_status('orange')
+                # pygame.draw.circle(self.screen, 'orange', (400, 300), 50)
             elif rms > 150:
-                pygame.draw.circle(self.screen, 'yellow', (400, 300), 50)
+                self.display_status('yellow')
+                # pygame.draw.circle(self.screen, 'yellow', (400, 300), 50)
             elif rms > 100:
-                pygame.draw.circle(self.screen, 'green', (400, 300), 50)
+                self.display_status('green')
+                # pygame.draw.circle(self.screen, 'green', (400, 300), 50)
             elif rms > 50:
-                pygame.draw.circle(self.screen, 'blue', (400, 300), 50)
+                self.display_status('blue')
+                # pygame.draw.circle(self.screen, 'blue', (400, 300), 50)
             elif rms > 30:
-                pygame.draw.circle(self.screen, 'purple', (400, 300), 50)
-            elif rms < 30:
-                pygame.draw.circle(self.screen, 'white', (400, 300), 50)
+                self.display_status('purple')
+                # pygame.draw.circle(self.screen, 'purple', (400, 300), 50)
+            elif rms > 22:
+                self.display_status('white')
+                # pygame.draw.circle(self.screen, 'white', (400, 300), 50)
 
     def run(self):
         print("Server Running")
@@ -119,7 +133,7 @@ class ScreenProcess:
                         self.device_name = params
 
             pygame.display.flip()
-            pygame.time.wait(50)
+            pygame.time.wait(40)
 
         pygame.quit()
 
