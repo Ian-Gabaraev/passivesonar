@@ -15,7 +15,7 @@ def print_rms(indata, frames, time, status):
     print(audio_data)
 
     # Calculate RMS
-    rms = np.sqrt(np.mean(audio_data ** 2))
+    rms = np.sqrt(np.mean(audio_data**2))
 
     if rms > 0:
         db = 20 * np.log10(rms)

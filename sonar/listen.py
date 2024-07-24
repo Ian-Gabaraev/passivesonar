@@ -7,16 +7,16 @@ from celeryapps import init_screen, analyze, draw_circle, display_device_name
 def plot(rms_values):
     plt.figure(figsize=(10, 6))
     plt.plot(rms_values)
-    plt.xlabel('Time (chunks)')
-    plt.ylabel('RMS (dBFS)')
-    plt.title('RMS Values Over Time')
+    plt.xlabel("Time (chunks)")
+    plt.ylabel("RMS (dBFS)")
+    plt.title("RMS Values Over Time")
     plt.grid(True)
     plt.show()
 
 
 def process_audio():
     init_screen.delay()
-    draw_circle.delay('green', (400, 300), 50)
+    draw_circle.delay("green", (400, 300), 50)
 
     FORMAT = pyaudio.paInt16  # Audio format (16-bit PCM)
     CHANNELS = 1  # Mono audio
@@ -27,7 +27,7 @@ def process_audio():
     rms_values = []
 
     p = pyaudio.PyAudio()
-    device_name = p.get_device_info_by_index(3)['name']
+    device_name = p.get_device_info_by_index(3)["name"]
     display_device_name.delay(device_name)
 
     stream = p.open(
@@ -45,7 +45,7 @@ def process_audio():
         data = stream.read(CHUNK)
         audio_data = np.frombuffer(data, dtype=np.int16)
         audio_data = audio_data.astype(np.int32)
-        rms = np.sqrt(np.mean(audio_data ** 2))
+        rms = np.sqrt(np.mean(audio_data**2))
         rms_values.append(rms)
         rms_for_analysis.append(float(rms))
 
