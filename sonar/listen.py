@@ -20,7 +20,7 @@ def plot(rms_values):
     plt.show()
 
 
-def process_audio(duration=120, device_index=2):
+def process_audio(duration=60, device_index=2):
     init_screen.delay()
     draw_circle.delay("green", (400, 300), 50)
 

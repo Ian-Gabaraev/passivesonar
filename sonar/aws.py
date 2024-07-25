@@ -13,6 +13,7 @@ load_dotenv()
 
 aws_access_key_id = os.getenv("AWS_ACCESS_KEY_ID")
 aws_secret_access_key = os.getenv("AWS_SECRET_ACCESS_KEY")
+aws_sqs_queue_url = os.getenv("AWS_SQS_QUEUE_URL")
 bucket_name = os.getenv("AWS_S3_BUCKET")
 s3_filename = f"{datetime.datetime.now()}-report.csv"
 
@@ -50,3 +51,19 @@ def upload_to_s3(csv_content: str):
         )
     except NoCredentialsError:
         print("Credentials not available")
+
+
+def send_message_to_sqs(message_body=None, message_attributes=None):
+    sqs_client = boto3.client("sqs")
+
+    if message_attributes is None:
+        message_attributes = {}
+
+    # Send the message
+    response = sqs_client.send_message(
+        QueueUrl=aws_sqs_queue_url,
+        MessageBody=message_body,
+        MessageAttributes=message_attributes,
+    )
+
+    return response
