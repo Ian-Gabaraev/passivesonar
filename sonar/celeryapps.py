@@ -26,6 +26,13 @@ def init_screen():
 
 
 @app.task
+def kill_screen():
+    task = json.dumps("kill")
+    r.publish("pygame_commands", task)
+    return "Screen killed"
+
+
+@app.task
 def display_device_name(device_name):
     task = json.dumps(("display_device_name", device_name))
     r.publish("pygame_commands", task)

@@ -6,6 +6,7 @@ import os
 
 from botocore.exceptions import NoCredentialsError
 from dotenv import load_dotenv
+import datetime
 
 load_dotenv()
 
@@ -13,7 +14,7 @@ load_dotenv()
 aws_access_key_id = os.getenv("AWS_ACCESS_KEY_ID")
 aws_secret_access_key = os.getenv("AWS_SECRET_ACCESS_KEY")
 bucket_name = os.getenv("AWS_S3_BUCKET")
-s3_filename = "report.csv"
+s3_filename = f"{datetime.datetime.now()}-report.csv"
 
 
 def create_csv(data: list) -> str:
