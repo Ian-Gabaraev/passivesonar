@@ -10,11 +10,18 @@ from celeryapps import (
 )
 
 
+def convert_to_db(rms_value, reference=32767):
+    """Convert an RMS value to decibels."""
+    if rms_value == 0:
+        return -np.inf  # Logarithm of zero is undefined, represents silence.
+    return 20 * np.log10(rms_value / reference)
+
+
 def plot(rms_values):
     plt.figure(figsize=(10, 6))
     plt.plot(rms_values)
     plt.xlabel("Time (chunks)")
-    plt.ylabel("RMS (dBFS)")
+    plt.ylabel("dB")
     plt.title("RMS Values Over Time")
     plt.grid(True)
     plt.show()
@@ -78,6 +85,8 @@ def process_audio(duration=60):
     stream.close()
     p.terminate()
     kill_screen.delay()
+
+    plot(rms_values)
 
 
 process_audio()
