@@ -21,8 +21,8 @@ def plot(rms_values):
     plt.figure(figsize=(10, 6))
     plt.plot(rms_values)
     plt.xlabel("Time (chunks)")
-    plt.ylabel("dB")
-    plt.title("RMS Values Over Time")
+    plt.ylabel("RMS")
+    plt.title("Root Median Square (RMS) Values Over Time")
     plt.grid(True)
     plt.show()
 
