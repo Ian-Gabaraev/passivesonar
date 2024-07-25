@@ -20,7 +20,14 @@ def plot(rms_values):
     plt.show()
 
 
-def process_audio(duration=60, device_index=2):
+def get_input_device_options(p: pyaudio.PyAudio):
+    for i in range(p.get_device_count()):
+        name = p.get_device_info_by_index(i)["name"]
+        channels = p.get_device_info_by_index(i)["maxInputChannels"]
+        print(f"Index: {i}, Name: {name}, Channels: {channels}")
+
+
+def process_audio(duration=60):
     init_screen.delay()
     draw_circle.delay("green", (400, 300), 50)
 
@@ -28,12 +35,18 @@ def process_audio(duration=60, device_index=2):
     CHANNELS = 1  # Mono audio
     RATE = 48000  # Sampling rate (48 kHz)
     CHUNK = 2048  # Buffer size (increased for better averaging)
-    RECORD_SECONDS = duration  # Duration of recording
 
     rms_values = []
 
     p = pyaudio.PyAudio()
+
+    print("Choose the device index for recording")
+    get_input_device_options(p)
+    device_index = int(input("Enter the device index: "))
     device_name = p.get_device_info_by_index(device_index)["name"]
+
+    print("Choose the duration of recording")
+    RECORD_SECONDS = int(input("Enter the duration in seconds: "))
 
     stream = p.open(
         format=FORMAT,

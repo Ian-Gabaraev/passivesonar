@@ -67,27 +67,36 @@ class LoudNoiseDetector:
         print(f"Loud chunks: {len(self.loud_chunks)}")
         self.alert_constant_noise()
 
+    def _wrap_up(self):
+        if len(self.loud_noise_duration) > 0:
+            self.loud_noise_duration[0].append(
+                datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            )
+        messages = [
+            "Loud noise detected between: " + " and ".join(durations)
+            for durations in self.loud_noise_duration
+        ]
+        send_message_to_sqs("\n".join(messages))
+
     def run(self):
         print("Loud Noise Processing Server Running")
 
         while True:
             message = self.redis_channel.get_message()
+
             if message and message["type"] == "message":
                 task = json.loads(message["data"])
+
                 if task == "kill":
-                    self.loud_noise_duration[0].append(
-                        datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                    )
-                    messages = [
-                        "Loud noise detected between: " + ",".join(durations)
-                        for durations in self.loud_noise_duration
-                    ]
-                    send_message_to_sqs("\n".join(messages))
+                    self._wrap_up()
                     break
+
                 try:
                     action, params = task
+
                     if action == "analyze":
                         self.analyze(params)
+
                 except ValueError:
                     pass
 
