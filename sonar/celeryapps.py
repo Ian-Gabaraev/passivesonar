@@ -21,11 +21,6 @@ r = redis.Redis(host="localhost", port=9812, db=0)
 
 
 @app.task
-def init_screen():
-    return "Screen initialized"
-
-
-@app.task
 def kill_screen():
     task = json.dumps("kill")
     r.publish("pygame_commands", task)
