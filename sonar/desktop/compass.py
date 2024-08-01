@@ -1,3 +1,8 @@
+import math
+
+import pygame
+
+
 def draw_compass(screen, direction):
     screen.fill((0, 0, 0))
     center = (screen.get_width() // 2, screen.get_height() // 2)

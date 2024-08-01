@@ -19,7 +19,7 @@ const generateChartData = (data, borderColor = 'rgb(17,103,157)') => {
         labels: Array.from({ length: data.length }, (_, i) => i + 1),
         datasets: [
             {
-                label: 'Data',
+                label: 'RMS',
                 data: data,
                 fill: false,
                 backgroundColor: 'rgba(75,192,192,0.4)',
@@ -62,6 +62,11 @@ const GridLayout = () => {
 
         socket.onmessage = (event) => {
             const data = JSON.parse(event.data)
+
+            if (data.type === "configure") {
+                console.log("Received a configuration message")
+            }
+
             data.forEach(
                 (item) => {
                     if (item.mic_id === 3) {

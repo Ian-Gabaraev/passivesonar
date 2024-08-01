@@ -3,7 +3,7 @@ import datetime
 import pyaudio
 import numpy as np
 import matplotlib.pyplot as plt
-from celeryapps import (
+from sonar.desktop.celeryapps import (
     analyze,
     display_device_name,
 )
