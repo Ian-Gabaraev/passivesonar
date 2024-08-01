@@ -17,7 +17,7 @@ CHUNK = 2048  # Buffer size (increased for better averaging)
 
 DURATION = None
 DEVICE_INDEX = None
-BATCH_SIZE = 20
+BATCH_SIZE = 80
 
 
 def convert_to_db(rms_value, reference=32767):
