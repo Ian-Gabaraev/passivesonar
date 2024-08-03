@@ -22,6 +22,7 @@ def relay(aggregate_size=2):
     while True:
         if (aggregated_message := aggregate(aggregate_size, r)) is not None:
             send_rms_to_sqs(aggregated_message)
+            print("Sent aggregated data to SQS")
         time.sleep(0.01)
 
 

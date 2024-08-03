@@ -20,6 +20,12 @@ bucket_name = os.getenv("AWS_S3_BUCKET")
 s3_filename = f"{datetime.datetime.now()}-report.csv"
 
 
+def get_sqs_url():
+    client = boto3.client("ssm", region_name=aws_region)
+    response = client.get_parameter(Name="SonarSQSURL")
+    return response["Parameter"]["Value"]
+
+
 def send_rms_to_sqs(message):
     sqs = boto3.client("sqs", region_name=aws_region)
     queue_url = aws_sqs_queue_url

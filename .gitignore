@@ -4,3 +4,5 @@ set_secrets.sh
 .env
 denv/
 layer/python
+.DS_Store
+waves/
