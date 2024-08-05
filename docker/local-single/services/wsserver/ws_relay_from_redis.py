@@ -15,7 +15,7 @@ REDIS_Q_NAME = os.getenv("REDIS_Q_NAME")
 
 async def send_audio_data(ws):
     while True:
-        result = aggregate(4)
+        result = aggregate(1)
         if result is not None:
             print("Sending aggregated data")
             await ws.send(json.dumps(result))

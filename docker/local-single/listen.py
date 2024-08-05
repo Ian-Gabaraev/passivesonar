@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import datetime
 import os
+import time
 from typing import Callable
 
 import pyaudio
@@ -21,8 +22,7 @@ CHANNELS = 1  # Mono audio
 RATE = 48000  # Sampling rate (48 kHz)
 CHUNK = 2048  # Buffer size (increased for better averaging)
 
-BATCH_SIZE = 20
-
+BATCH_SIZE = 100
 DEVICE_INDEX = 3
 DURATION = 3600
 
@@ -107,7 +107,7 @@ def collect_rms(
             if noise_func is not None:
                 noise_func(rms_for_analysis)
 
-            print(f"Pushed a batch of {BATCH_SIZE} RMS values to relay service")
+            print(f"{datetime.datetime.now()} Pushed a batch of {BATCH_SIZE} RMS values to relay service")
             rms_for_analysis.clear()
 
     stream.stop_stream()

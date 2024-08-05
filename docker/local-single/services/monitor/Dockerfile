@@ -28,4 +28,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY ../.. /app/
 
 # Set the default command to run the remaining processes
-CMD ["sh", "-c", "python celeryapps.py & python monitor.py"]
+CMD ["sh", "-c", "python monitor.py"]

@@ -2,12 +2,16 @@ import React, {useEffect, useState} from 'react';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import './GridLayout.css';
+import {Button, Card, Row} from "react-bootstrap";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const generateZeroes = () => {
     const data = [];
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 100; i++) {
         data.push(0);
     }
     return data;
@@ -19,7 +23,7 @@ const generateChartData = (data, borderColor = 'rgb(17,103,157)') => {
         labels: Array.from({ length: data.length }, (_, i) => i + 1),
         datasets: [
             {
-                label: 'RMS',
+                label: 'Mic Graph',
                 data: data,
                 fill: false,
                 backgroundColor: 'rgba(75,192,192,0.4)',
@@ -69,14 +73,8 @@ const GridLayout = () => {
 
             data.forEach(
                 (item) => {
-                    if (item.mic_id === 3) {
-                        changeBorder(setData1Border, item.rms_values)
-                        setData1(item.rms_values)
-                    }
-                    if (item.mic_id === 5) {
-                        changeBorder(setData2Border, item.rms_values)
-                        setData2(item.rms_values)
-                    }
+                    changeBorder(setData1Border, item.rms_values)
+                    setData1(item.rms_values)
                 }
             )
         };
@@ -89,14 +87,8 @@ const GridLayout = () => {
             const zeroes = generateZeroes()
 
             setData1(zeroes)
-            setData2(zeroes)
-            setData3(zeroes)
-            setData4(zeroes)
 
             setData1Border('#11679D')
-            setData2Border('#11679D')
-            setData3Border('#11679D')
-            setData4Border('#11679D')
             console.log('WebSocket connection closed');
         };
 
@@ -108,29 +100,52 @@ const GridLayout = () => {
     const zeroes = generateZeroes()
 
     const [data1, setData1] = useState(zeroes)
-    const [data2, setData2] = useState(zeroes)
-    const [data3, setData3] = useState(zeroes)
-    const [data4, setData4] = useState(zeroes)
 
     const [data1Border, setData1Border] = useState('#11679D')
-    const [data2Border, setData2Border] = useState('#11679D')
-    const [data3Border, setData3Border] = useState('#11679D')
-    const [data4Border, setData4Border] = useState('#11679D')
 
     return (
-        <div className="container">
+        <div className="container-fluid">
 
             <header className="gr-header">
                 <h1>Sonar</h1>
             </header>
 
-            <div className={`grid-container box-count-${2}`}>
+            <div className={`grid-container box-count-${1}`}>
+
                 <div className="grid-item">
                     <Line data={generateChartData(data1, data1Border)} />
                 </div>
-                <div className="grid-item">
-                    <Line data={generateChartData(data2, data2Border)} />
-                </div>
+
+                {/*<div className="grid-item">*/}
+
+                {/*    <Card>*/}
+                {/*        <Card.Header>Info</Card.Header>*/}
+                {/*        <Card.Body>*/}
+
+                {/*            <Card.Title>Special title treatment</Card.Title>*/}
+                {/*            <Card.Text>*/}
+                {/*                With supporting text below as a natural lead-in to additional content.*/}
+                {/*            </Card.Text>*/}
+                {/*            <Row>*/}
+                {/*                <div className={"col"}>*/}
+                {/*            <Button variant="primary">Listen</Button>*/}
+                {/*                </div>*/}
+                {/*                <div className={"col"}>*/}
+                {/*            <Button variant="danger">Stop</Button>*/}
+                {/*                </div>*/}
+
+                {/*                <div className={"col"}>*/}
+                {/*                    <Button variant="danger">Stop</Button>*/}
+                {/*                </div>*/}
+                {/*            </Row>*/}
+
+                {/*        </Card.Body>*/}
+                {/*        <Card.Footer>*/}
+                {/*            Some text*/}
+                {/*        </Card.Footer>*/}
+                {/*    </Card>*/}
+                {/*</div>*/}
+
             </div>
 
         </div>

@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+
   redis:
     image: redis:latest
     ports:
@@ -20,6 +21,17 @@ services:
       sh -c "python ws_server.py & 
              python ws_relay_from_redis.py"
 
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    command: >
+      sh -c "celery -A celeryapps worker --loglevel=info"
+
   monitoring:
     build:
       context: .
@@ -29,5 +41,4 @@ services:
     depends_on:
       - redis
     command: >
-      sh -c "python celeryapps.py & 
-             python monitor.py"
+      sh -c " python monitor.py"
