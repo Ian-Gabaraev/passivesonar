@@ -113,7 +113,9 @@ def launch():
     device_index = get_device_index(p)
     duration = get_duration()
     stream = get_audio_stream(p, device_index)
-    collect_rms(p, device_index, stream, duration, push_rms_to_redis, push_audio_to_redis)
+    collect_rms(
+        p, device_index, stream, duration, push_rms_to_redis, push_audio_to_redis
+    )
 
 
 if __name__ == "__main__":
