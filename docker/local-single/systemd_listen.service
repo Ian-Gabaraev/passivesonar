@@ -1,0 +1,17 @@
+[Unit]
+Description=Sonar Listening Service
+After=network.target
+
+[Service]
+Type=simple
+User=username
+WorkingDirectory=/home/username/scripts
+ExecStart=/usr/bin/python3 /home/username/scripts/my_script.py
+Restart=on-failure
+Environment=REDIS_HOST=localhost
+Environment=REDIS_PORT=7979
+Environment=REDIS_Q_NAME=SonarMessages
+Environment=REDIS_AUDIO_Q_NAME=Audio
+
+[Install]
+WantedBy=multi-user.target

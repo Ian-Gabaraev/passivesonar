@@ -1,0 +1,5 @@
+PyAudio==0.2.14
+celery==5.4.0
+numpy==2.0.1
+redis==5.0.7
+python-dotenv==1.0.1

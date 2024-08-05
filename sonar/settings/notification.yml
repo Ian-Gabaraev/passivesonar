@@ -1,0 +1,34 @@
+services:
+
+    - name: slack
+        - enabled: false
+        - url: null
+        - channel: #channel
+        - username: username
+
+    - name: email
+        - enabled: false
+        - smtp_host: null
+        - smtp_port: null
+        - smtp_username: null
+        - smtp_password: null
+        - smtp_from: null
+        - ssl_enabled: false
+        - starttls_enabled: false
+
+    - name: webhook
+        - enabled: false
+        - url: null
+        - secret: null
+
+    - name: sns
+        - enabled: false
+        - aws_access_key: null
+        - aws_secret_key: null
+        - aws_region: null
+        - sns_topic_arn: null
+
+    - name: telegram
+        - enabled: false
+        - bot_token: null
+        - chat_id: null

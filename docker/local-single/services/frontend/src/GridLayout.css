@@ -1,0 +1,70 @@
+.container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+}
+
+.gr-header {
+    background-color: navy;
+    color: white;
+    padding: 0px 6px;
+    text-align: left;
+    font-size: 0.8em;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    border-bottom: 2px solid #003366; /* Darker shade for 3D effect */
+    border-radius: 15px 15px 0 0; /* Rounded corners at the top */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h1 {
+    margin: 0;
+}
+
+.control-panel {
+    display: flex;
+    align-items: center;
+}
+
+.control-panel label {
+    margin-right: 5px;
+}
+
+.grid-container {
+    display: grid;
+    flex: 1;
+    height: calc(100vh - 40px); /* Adjust height to account for header */
+    width: 100%;
+    margin-top: -2px; /* Adjust for border overlap */
+}
+
+.box-count-1 {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+}
+
+.box-count-2 {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr;
+}
+
+.box-count-3 {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr;
+}
+
+.box-count-4 {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+}
+
+.grid-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid black; /* Optional: For visual separation */
+    box-sizing: border-box; /* Ensures borders are included in the size */
+    padding: 10px; /* Add padding for the charts */
+}
