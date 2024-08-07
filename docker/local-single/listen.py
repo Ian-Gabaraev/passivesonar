@@ -107,7 +107,9 @@ def collect_rms(
             if noise_func is not None:
                 noise_func(rms_for_analysis)
 
-            print(f"{datetime.datetime.now()} Pushed a batch of {BATCH_SIZE} RMS values to relay service")
+            print(
+                f"{datetime.datetime.now()} Pushed a batch of {BATCH_SIZE} RMS values to relay service"
+            )
             rms_for_analysis.clear()
 
     stream.stop_stream()
