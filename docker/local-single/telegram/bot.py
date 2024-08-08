@@ -1,4 +1,6 @@
 import os
+import time
+
 from utils import (
     get_cpu_temperature,
     get_battery,
@@ -34,5 +36,6 @@ def handle_message(message):
 
 
 if __name__ == "__main__":
+    time.sleep(30)
     send_on_startup()
     bot.polling()
