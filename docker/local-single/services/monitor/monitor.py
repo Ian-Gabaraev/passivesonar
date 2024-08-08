@@ -23,12 +23,12 @@ def start():
             audio_data = json.loads(r.rpop(REDIS_MONITOR_Q_NAME))
             mean = np.mean(audio_data)
 
-            if streak >= 60:
+            if streak >= 5:
                 print("Consistent loud noise detected. Recording...")
                 record_audio.delay()
                 streak = 0
 
-            if mean > 2000:
+            if mean > 30:
                 print("Loud noise detected")
                 streak += 1
             else:

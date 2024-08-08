@@ -31,6 +31,8 @@ services:
       - redis
     command: >
       sh -c "celery -A celeryapps worker --loglevel=info"
+    volumes:
+      - /Users/iangabaraev/wav/:/app/wav/
 
   monitoring:
     build:

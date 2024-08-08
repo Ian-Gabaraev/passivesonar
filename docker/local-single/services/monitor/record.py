@@ -17,7 +17,7 @@ class Recording:
         self.stream = None
 
     def get_filename(self):
-        return f"waves/{self.launch_time.strftime('%Y-%m-%d_%H-%M-%S')}.wav"
+        return f"wav/{self.launch_time.strftime('%Y-%m-%d_%H-%M-%S')}.wav"
 
     def get_output_stream(self):
         wf = wave.open(self.file_name, "wb")

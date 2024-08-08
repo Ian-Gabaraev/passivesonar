@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import datetime
 import os
-import time
 from typing import Callable
 
 import pyaudio
@@ -18,9 +17,9 @@ load_dotenv()
 REDIS_AUDIO_Q_NAME = os.getenv("REDIS_AUDIO_Q_NAME")
 
 FORMAT = pyaudio.paInt16  # Audio format (16-bit PCM)
-CHANNELS = 1  # Mono audio
-RATE = 48000  # Sampling rate (48 kHz)
-CHUNK = 2048  # Buffer size (increased for better averaging)
+CHANNELS = 1
+RATE = int(os.getenv("SAMPLE_RATE", 48000))
+CHUNK = int(os.getenv("CHUNK_SIZE", 2048))
 
 BATCH_SIZE = 100
 DEVICE_INDEX = 3
@@ -101,6 +100,7 @@ def collect_rms(
         rms_values.append(rms)
         rms_for_analysis.append(float(rms))
 
+        # This is not good
         if len(rms_for_analysis) == BATCH_SIZE:
             if relay is not None:
                 relay(rms_for_analysis, device_index)
