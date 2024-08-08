@@ -5,7 +5,7 @@ services:
   redis:
     image: redis:latest
     ports:
-      - "6379:6379"
+      - "9595:6379"
 
   wsserver:
     build:
@@ -41,4 +41,4 @@ services:
     depends_on:
       - redis
     command: >
-      sh -c " python monitor.py"
+      sh -c "python monitor.py"
