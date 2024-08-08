@@ -37,5 +37,6 @@ def get_system_uptime():
 
 
 def get_battery():
-
-    return psutil.sensors_battery().percent
+    if psutil.sensors_battery():
+        return psutil.sensors_battery().percent
+    return "N/A"
