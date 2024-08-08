@@ -3,11 +3,13 @@ version: '3.8'
 services:
 
   redis:
+    restart: unless-stopped
     image: redis:latest
     ports:
       - "9595:6379"
 
   wsserver:
+    restart: unless-stopped
     build:
       context: ./wsserver
       dockerfile: Dockerfile
@@ -22,6 +24,7 @@ services:
              python ws_relay_from_redis.py"
 
   celery:
+    restart: unless-stopped
     build:
       context: ./monitor
       dockerfile: Dockerfile
@@ -35,6 +38,7 @@ services:
       - /Users/iangabaraev/wav/:/app/wav/
 
   monitoring:
+    restart: unless-stopped
     build:
       context: ./monitor
       dockerfile: Dockerfile
