@@ -2,11 +2,13 @@ from __future__ import annotations
 
 import datetime
 import os
+import time
 from typing import Callable
 
 import pyaudio
 import numpy as np
 import matplotlib.pyplot as plt
+import redis.exceptions
 
 from utils.aws import upload_file_to_s3
 from utils.redis_q import push_rms_to_redis, push_audio_to_redis
@@ -92,8 +94,12 @@ def collect_rms(
         data = stream.read(CHUNK)
         audio_data = np.frombuffer(data, dtype=np.int16)
 
-        if noise_func is not None:
-            noise_func(audio_data, REDIS_AUDIO_Q_NAME)
+        try:
+            if noise_func is not None:
+                noise_func(audio_data, REDIS_AUDIO_Q_NAME)
+        except redis.exceptions.ConnectionError:
+            print("Redis connection error")
+            time.sleep(10)
 
         audio_data = audio_data.astype(np.int32)
         rms = np.sqrt(np.mean(audio_data**2))
