@@ -25,7 +25,7 @@ RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code into the image
-COPY ../.. /app/
+COPY . /app/
 
 # Set the default command to run the remaining processes
 CMD ["sh", "-c", "python monitor.py"]
