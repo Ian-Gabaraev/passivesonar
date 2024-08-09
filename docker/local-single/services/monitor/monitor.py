@@ -33,7 +33,7 @@ def start():
                 record_audio.delay()
                 streak = 0
 
-            if mean > 30:
+            if mean > 500:
                 print("Loud noise detected")
                 streak += 1
             else:
