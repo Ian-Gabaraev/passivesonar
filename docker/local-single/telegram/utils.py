@@ -4,6 +4,9 @@ import psutil
 import subprocess
 
 
+def get_queues_load(): ...
+
+
 def get_cpu_temperature():
     try:
         result = subprocess.run(["vcgencmd", "measure_temp"], capture_output=True)

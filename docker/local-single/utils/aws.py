@@ -20,6 +20,38 @@ bucket_name = os.getenv("AWS_S3_BUCKET")
 s3_filename = f"{datetime.datetime.now()}-report.csv"
 
 
+def get_batch_size():
+    ssm = boto3.client("ssm")
+    parameter_name = "BatchSize"
+    response = ssm.get_parameter(Name=parameter_name, WithDecryption=True)
+    parameter_value = response["Parameter"]["Value"]
+    return parameter_value
+
+
+def get_chunk_size():
+    ssm = boto3.client("ssm")
+    parameter_name = "ChunkSize"
+    response = ssm.get_parameter(Name=parameter_name, WithDecryption=True)
+    parameter_value = response["Parameter"]["Value"]
+    return parameter_value
+
+
+def get_listening_duration():
+    ssm = boto3.client("ssm")
+    parameter_name = "ListeningDurationSec"
+    response = ssm.get_parameter(Name=parameter_name, WithDecryption=True)
+    parameter_value = response["Parameter"]["Value"]
+    return parameter_value
+
+
+def get_sampling_rate():
+    ssm = boto3.client("ssm")
+    parameter_name = "SamplingRateHZ"
+    response = ssm.get_parameter(Name=parameter_name, WithDecryption=True)
+    parameter_value = response["Parameter"]["Value"]
+    return parameter_value
+
+
 def get_sqs_url():
     client = boto3.client("ssm", region_name=aws_region)
     response = client.get_parameter(Name="SonarSQSURL")

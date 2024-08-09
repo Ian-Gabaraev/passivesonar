@@ -2,16 +2,22 @@ from __future__ import annotations
 
 import datetime
 import os
+import sys
 import time
 from typing import Callable
 
 import pyaudio
 import numpy as np
 import matplotlib.pyplot as plt
-import redis.exceptions
 
-from utils.aws import upload_file_to_s3
-from utils.redis_q import push_rms_to_redis, push_audio_to_redis
+from utils.aws import (
+    upload_file_to_s3,
+    get_batch_size,
+    get_chunk_size,
+    get_sampling_rate,
+    get_listening_duration,
+)
+from utils.redis_q import push_rms_to_redis, push_audio_to_redis, redis_online
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -20,12 +26,12 @@ REDIS_AUDIO_Q_NAME = os.getenv("REDIS_AUDIO_Q_NAME")
 
 FORMAT = pyaudio.paInt16  # Audio format (16-bit PCM)
 CHANNELS = 1
-RATE = int(os.getenv("SAMPLE_RATE", 48000))
-CHUNK = int(os.getenv("CHUNK_SIZE", 2048))
+RATE = int(get_sampling_rate())
+CHUNK = int(get_chunk_size())
 
-BATCH_SIZE = 100
+BATCH_SIZE = int(get_batch_size())
 DEVICE_INDEX = 3
-DURATION = 3600
+DURATION = int(get_listening_duration())
 
 
 def plot(rms_values: list[int | float], upload=False, show=True):
@@ -75,7 +81,11 @@ def get_audio_stream(p: pyaudio.PyAudio, device_index: int) -> pyaudio.Stream:
         frames_per_buffer=CHUNK,
         input_device_index=device_index,
     )
-    print("Stream opened")
+    print("Stream opened with device index", device_index)
+    print("Sampling rate:", RATE)
+    print("Chunk size:", CHUNK)
+    print("Duration:", DURATION)
+    print("Batch size:", BATCH_SIZE)
     return stream
 
 
@@ -94,12 +104,8 @@ def collect_rms(
         data = stream.read(CHUNK)
         audio_data = np.frombuffer(data, dtype=np.int16)
 
-        try:
-            if noise_func is not None:
-                noise_func(audio_data, REDIS_AUDIO_Q_NAME)
-        except redis.exceptions.ConnectionError:
-            print("Redis connection error")
-            time.sleep(10)
+        if noise_func is not None:
+            noise_func(audio_data, REDIS_AUDIO_Q_NAME)
 
         audio_data = audio_data.astype(np.int32)
         rms = np.sqrt(np.mean(audio_data**2))
@@ -126,6 +132,16 @@ def collect_rms(
 
 
 def launch():
+    retries = 0
+    while not redis_online():
+        print("Redis is not online. Waiting for 10 seconds before retrying.")
+        time.sleep(10)
+        retries += 1
+
+        if retries > 10:
+            print("Max retries reached. Exiting.")
+            sys.exit(1)
+
     p = pyaudio.PyAudio()
     device_index = get_device_index(p)
     duration = get_duration()

@@ -15,6 +15,13 @@ REDIS_MONITOR_Q_NAME = os.getenv("REDIS_MONITOR_Q_NAME")
 r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
 
 
+def redis_online():
+    try:
+        return r.ping() is True
+    except redis.exceptions.ConnectionError:
+        return False
+
+
 def push_rms_to_redis(rms_values, mic_id, q_name=REDIS_Q_NAME):
     message = {"mic_id": mic_id, "rms_values": rms_values}
     r.lpush(q_name, json.dumps(message))
