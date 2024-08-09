@@ -10,6 +10,7 @@ import redis
 REDIS_HOST = os.getenv("REDIS_HOST")
 REDIS_PORT = os.getenv("REDIS_PORT")
 REDIS_MONITOR_Q_NAME = os.getenv("REDIS_MONITOR_Q_NAME")
+REDIS_AUDIO_Q_NAME = os.getenv("REDIS_AUDIO_Q_NAME")
 
 r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
 
@@ -22,6 +23,10 @@ def start():
         if r.llen(REDIS_MONITOR_Q_NAME) > 0:
             audio_data = json.loads(r.rpop(REDIS_MONITOR_Q_NAME))
             mean = np.mean(audio_data)
+
+            if streak == 0 and r.llen(REDIS_AUDIO_Q_NAME) >= 44_000:
+                r.ltrim(REDIS_AUDIO_Q_NAME, 1, 0)
+                print("Audio Q is full. Clearing it...")
 
             if streak >= 5:
                 print("Consistent loud noise detected. Recording...")
