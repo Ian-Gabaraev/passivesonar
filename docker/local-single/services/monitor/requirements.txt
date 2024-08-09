@@ -4,3 +4,4 @@ numpy==2.0.1
 redis==5.0.7
 python-dotenv==1.0.1
 pyTelegramBotAPI==4.21.0
+boto3==1.34.148

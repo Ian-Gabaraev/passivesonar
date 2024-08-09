@@ -5,6 +5,7 @@ import redis
 from record import Recording
 from dotenv import load_dotenv
 from bot import send_audio_message
+from aws import get_sampling_rate, get_chunk_size, get_recording_duration
 
 load_dotenv()
 
@@ -12,8 +13,10 @@ REDIS_HOST = os.getenv("REDIS_HOST")
 REDIS_PORT = os.getenv("REDIS_PORT")
 REDIS_Q_NAME = os.getenv("REDIS_Q_NAME")
 REDIS_AUDIO_Q_NAME = os.getenv("REDIS_AUDIO_Q_NAME")
-SAMPLE_RATE = int(os.getenv("SAMPLE_RATE", 48000))
-CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", 2048))
+
+SAMPLE_RATE = int(get_sampling_rate())
+CHUNK_SIZE = int(get_chunk_size())
+RECORDING_DURATION = int(get_recording_duration())
 
 app = Celery(
     "audio_processor",
@@ -40,7 +43,7 @@ def calculate_chunks_per_second(sample_rate, chunk_size):
 
 
 @app.task
-def record_audio(seconds=30):
+def record_audio(seconds=RECORDING_DURATION):
     recording = Recording()
     recording.start()
     print("Recording audio")

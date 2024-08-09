@@ -1,11 +1,12 @@
 from datetime import datetime
 import wave
+from aws import get_sampling_rate
 
 import pyaudio
 
 FORMAT = pyaudio.paInt16  # Audio format (16-bit PCM)
 CHANNELS = 1  # Mono audio
-RATE = 48000  # Sampling rate (48 kHz)
+RATE = int(get_sampling_rate())  # Sampling rate (48 kHz)
 
 
 class Recording:

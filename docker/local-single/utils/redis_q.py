@@ -23,15 +23,23 @@ def redis_online():
 
 
 def push_rms_to_redis(rms_values, mic_id, q_name=REDIS_Q_NAME):
-    message = {"mic_id": mic_id, "rms_values": rms_values}
-    r.lpush(q_name, json.dumps(message))
+    try:
+        message = {"mic_id": mic_id, "rms_values": rms_values}
+        r.lpush(q_name, json.dumps(message))
+    except redis.ConnectionError:
+        print("Redis not connected")
+        return
 
 
 def push_audio_to_redis(audio_data, q_name=REDIS_MONITOR_Q_NAME):
-    if isinstance(audio_data, np.ndarray):
-        r.rpush(q_name, audio_data.tobytes())
-    else:
-        r.rpush(q_name, json.dumps(audio_data))
+    try:
+        if isinstance(audio_data, np.ndarray):
+            r.rpush(q_name, audio_data.tobytes())
+        else:
+            r.rpush(q_name, json.dumps(audio_data))
+    except redis.ConnectionError:
+        print("Redis not connected")
+        return
 
 
 def aggregate(aggregate_size):
