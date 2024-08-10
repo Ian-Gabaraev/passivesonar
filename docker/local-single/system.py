@@ -13,12 +13,12 @@ SYSTEM_Q_NAME = os.getenv("SYSTEM_Q_NAME")
 
 def gather_system_metrics():
     return f"""
-        "cpu_temperature": {get_cpu_temperature()},
-        "battery": {get_battery()},
-        "cpu_usage": {get_cpu_usage()}%",
-        "ram_usage": {get_ram_usage()}%",
-        "system_uptime": {get_system_uptime()},
-    """
+"cpu_temperature": {get_cpu_temperature()},
+"battery": {get_battery()},
+"cpu_usage": {get_cpu_usage()}%",
+"ram_usage": {get_ram_usage()}%",
+"system_uptime": {get_system_uptime()},
+"""
 
 
 def log_system_metrics():
