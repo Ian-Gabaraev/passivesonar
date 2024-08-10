@@ -4,7 +4,6 @@ import time
 import numpy as np
 from celery import Celery
 import redis
-import json
 from record import Recording
 from dotenv import load_dotenv
 

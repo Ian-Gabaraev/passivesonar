@@ -11,6 +11,7 @@ REDIS_HOST = os.getenv("REDIS_HOST")
 REDIS_PORT = os.getenv("REDIS_PORT")
 REDIS_Q_NAME = os.getenv("REDIS_Q_NAME")
 REDIS_MONITOR_Q_NAME = os.getenv("REDIS_MONITOR_Q_NAME")
+SYSTEM_Q_NAME = os.getenv("SYSTEM_Q_NAME")
 
 r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
 
@@ -20,6 +21,16 @@ def redis_online():
         return r.ping() is True
     except redis.exceptions.ConnectionError:
         return False
+
+
+def push_system_metrics_to_redis(system_metrics):
+    try:
+        r.rpush(SYSTEM_Q_NAME, json.dumps(system_metrics))
+    except redis.ConnectionError:
+        print("Redis not connected")
+        return
+    else:
+        print("System metrics pushed to Redis")
 
 
 def push_rms_to_redis(rms_values, mic_id, q_name=REDIS_Q_NAME):

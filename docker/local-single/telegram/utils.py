@@ -20,11 +20,10 @@ def get_cpu_temperature():
 
 def get_ram_usage():
     memory_info = psutil.virtual_memory()
-    total_memory = memory_info.total / (1024**2)  # Convert from bytes to MB
-    used_memory = memory_info.used / (1024**2)  # Convert from bytes to MB
-    free_memory = memory_info.free / (1024**2)  # Convert from bytes to MB
+    total_memory = memory_info.total / (1024**2)
+    used_memory = memory_info.used / (1024**2)
 
-    return total_memory, used_memory, free_memory
+    return round((used_memory / total_memory) * 100)
 
 
 def get_cpu_usage():

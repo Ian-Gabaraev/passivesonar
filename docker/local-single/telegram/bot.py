@@ -19,6 +19,11 @@ main_chat_id = os.getenv("MAIN_CHAT_ID")
 bot = telebot.TeleBot(bot_token)
 
 
+# This needs to removed
+# Push stats metrics to cloudwatch
+# retrieve from bot in monitor service
+
+
 def send_on_startup():
     bot.send_message(main_chat_id, "Bot is running 🚀")
 

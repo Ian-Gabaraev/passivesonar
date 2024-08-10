@@ -56,3 +56,19 @@ services:
       - redis
     command: >
       sh -c "python monitor.py"
+
+  bot:
+    restart: unless-stopped
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+    build:
+      context: ./monitor
+      dockerfile: Dockerfile
+    env_file:
+      - monitor/.env
+    depends_on:
+      - redis
+    command: >
+      sh -c "python bot.py"

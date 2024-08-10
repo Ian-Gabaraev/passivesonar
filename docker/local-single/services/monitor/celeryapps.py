@@ -43,21 +43,21 @@ def calculate_chunks_per_second(sample_rate, chunk_size):
 
 
 @app.task
-def record_audio(seconds=RECORDING_DURATION):
+def record_audio(seconds=RECORDING_DURATION, message=None):
     recording = Recording()
     recording.start()
-    print("Recording audio")
 
     number_of_messages = calculate_chunks_per_second(SAMPLE_RATE, CHUNK_SIZE) * seconds
     latest_messages = r.lrange(REDIS_AUDIO_Q_NAME, -number_of_messages, -1)
+
+    if len(latest_messages) == 0:
+        return "Nothing to record"
 
     for data in latest_messages:
         audio_data = np.frombuffer(data, dtype=np.int16)
         recording.stream.writeframes(audio_data)
 
     with open(recording.file_name, "rb") as audio:
-        send_audio_message(audio)
-    print("Audio sent to the main chat")
-    print("Recording stopped")
+        send_audio_message(audio, message)
     recording.stop()
     return "Audio recorded"
