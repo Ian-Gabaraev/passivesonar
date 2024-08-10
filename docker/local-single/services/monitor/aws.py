@@ -11,30 +11,29 @@ aws_secret_access_key = os.getenv("AWS_SECRET_ACCESS_KEY")
 aws_sqs_queue_url = os.getenv("AWS_SQS_QUEUE_URL")
 aws_region = os.getenv("AWS_REGION")
 
-log_group_name = 'sonar'
-log_stream_name = 'sonarlogstream'
+log_group_name = "sonar"
+log_stream_name = "sonarlogstream"
 
 
 def sed_log(log_message):
-    client = boto3.client('logs', region_name=aws_region)
+    client = boto3.client("logs", region_name=aws_region)
     response = client.describe_log_streams(
-        logGroupName=log_group_name,
-        logStreamNamePrefix=log_stream_name
+        logGroupName=log_group_name, logStreamNamePrefix=log_stream_name
     )
-    sequence_token = response['logStreams'][0].get('uploadSequenceToken')
+    sequence_token = response["logStreams"][0].get("uploadSequenceToken")
     log_event = {
-        'logGroupName': log_group_name,
-        'logStreamName': log_stream_name,
-        'logEvents': [
+        "logGroupName": log_group_name,
+        "logStreamName": log_stream_name,
+        "logEvents": [
             {
-                'timestamp': int(datetime.now().timestamp() * 1000),
-                'message': log_message
+                "timestamp": int(datetime.now().timestamp() * 1000),
+                "message": log_message,
             }
         ],
     }
 
     if sequence_token:
-        log_event['sequenceToken'] = sequence_token
+        log_event["sequenceToken"] = sequence_token
 
     client.put_log_events(**log_event)
 

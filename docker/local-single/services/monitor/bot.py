@@ -22,6 +22,11 @@ REDIS_SYSTEM_Q_NAME = os.getenv("REDIS_SYSTEM_Q_NAME")
 r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
 
 
+def send_plot(plot_file):
+    print("Sending plot", plot_file)
+    bot.send_photo(main_chat_id, plot_file)
+
+
 def send_audio_message(audio, message="Loud noise"):
     bot.send_audio(main_chat_id, audio, message)
 
@@ -29,6 +34,7 @@ def send_audio_message(audio, message="Loud noise"):
 @bot.message_handler(func=lambda message: message.text == "listen")
 def handle_message(message):
     from celeryapps import record_audio
+
     record_audio.delay()
 
 

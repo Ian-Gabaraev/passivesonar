@@ -1,7 +1,13 @@
 import os
 import time
 
-from telegram.utils import get_cpu_temperature, get_battery, get_cpu_usage, get_ram_usage, get_system_uptime
+from telegram.utils import (
+    get_cpu_temperature,
+    get_battery,
+    get_cpu_usage,
+    get_ram_usage,
+    get_system_uptime,
+)
 
 from dotenv import load_dotenv
 from utils.redis_q import push_system_metrics_to_redis
