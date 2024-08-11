@@ -6,7 +6,12 @@ import redis
 from record import Recording
 from dotenv import load_dotenv
 from bot import send_audio_message, send_plot
-from aws import get_sampling_rate, get_chunk_size, get_recording_duration, get_plot_chunk_size
+from aws import (
+    get_sampling_rate,
+    get_chunk_size,
+    get_recording_duration,
+    get_plot_chunk_size,
+)
 from utils.plots import plot_stats
 
 load_dotenv()

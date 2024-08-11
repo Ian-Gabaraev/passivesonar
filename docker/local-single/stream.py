@@ -48,3 +48,10 @@ class PyAudioStream:
         self.p.terminate()
         self.p = pyaudio.PyAudio()
         self.open()
+
+    def __str__(self):
+        return f"PyAudioStream(device_index={self.device_index}, " \
+               f"sampling_rate={RATE}, " \
+               f"chunk_size={CHUNK}, " \
+               f"duration={DURATION}, " \
+               f"batch_size={BATCH_SIZE})"

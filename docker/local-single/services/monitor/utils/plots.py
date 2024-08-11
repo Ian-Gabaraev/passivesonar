@@ -7,7 +7,7 @@ import numpy as np
 def plot_stats(data, filename, chunk_size=100):
     stats = []
     for i in range(0, len(data), chunk_size):
-        sublist = data[i: i + chunk_size]
+        sublist = data[i : i + chunk_size]
         stats.append(np.mean(sublist))
 
     plt.figure(figsize=(20, 6))
