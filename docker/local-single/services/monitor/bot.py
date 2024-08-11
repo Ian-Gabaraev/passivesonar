@@ -34,7 +34,6 @@ def send_audio_message(audio, message="Loud noise"):
 @bot.message_handler(func=lambda message: message.text == "listen")
 def handle_message(message):
     from celeryapps import record_audio
-
     record_audio.delay()
 
 

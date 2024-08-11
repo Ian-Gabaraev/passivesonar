@@ -132,3 +132,11 @@ def get_log_stream_name():
     response = ssm.get_parameter(Name=parameter_name, WithDecryption=True)
     parameter_value = response["Parameter"]["Value"]
     return parameter_value
+
+
+def get_plot_chunk_size():
+    ssm = boto3.client("ssm")
+    parameter_name = "PlotChunkSize"
+    response = ssm.get_parameter(Name=parameter_name, WithDecryption=True)
+    parameter_value = response["Parameter"]["Value"]
+    return parameter_value

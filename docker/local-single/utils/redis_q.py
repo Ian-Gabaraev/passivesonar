@@ -30,7 +30,7 @@ def push_system_metrics_to_redis(system_metrics):
         print("Redis not connected")
         return
     else:
-        print("System metrics pushed to Redis")
+        return True
 
 
 def push_rms_to_redis(rms_values, mic_id, q_name=REDIS_Q_NAME):
