@@ -4,6 +4,8 @@ import os
 import redis
 import telebot
 from dotenv import load_dotenv
+from telebot import types
+
 from aws import get_tg_bot_key, get_main_chat_id
 
 load_dotenv()
@@ -20,6 +22,18 @@ REDIS_AUDIO_Q_NAME = os.getenv("REDIS_AUDIO_Q_NAME")
 REDIS_SYSTEM_Q_NAME = os.getenv("REDIS_SYSTEM_Q_NAME")
 
 r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
+
+
+@bot.message_handler(commands=["start"])
+def send_welcome(message):
+    markup = types.ReplyKeyboardMarkup(row_width=2)
+    btn1 = types.KeyboardButton("System ℹ️ Info")
+    btn2 = types.KeyboardButton("Listen 🎙️ Live")
+    markup.add(
+        btn1,
+        btn2,
+    )
+    bot.send_message(message.chat.id, "Choose an option:", reply_markup=markup)
 
 
 def send_plot(plot_file):
@@ -45,6 +59,5 @@ def handle_message(message):
 
 
 if __name__ == "__main__":
-    print("Bot is running")
-    print("System queue name: ", REDIS_SYSTEM_Q_NAME)
+    bot.send_message(main_chat_id, "Bot is up and running")
     bot.polling()

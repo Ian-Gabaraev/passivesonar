@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import datetime
 import os
 import sys
 import time
@@ -8,10 +7,8 @@ from typing import Callable
 
 import pyaudio
 import numpy as np
-import matplotlib.pyplot as plt
 
 from utils.aws import (
-    upload_file_to_s3,
     get_batch_size,
     get_chunk_size,
     get_sampling_rate,
