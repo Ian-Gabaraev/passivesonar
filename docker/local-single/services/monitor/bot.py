@@ -20,6 +20,7 @@ REDIS_PORT = os.getenv("REDIS_PORT")
 REDIS_Q_NAME = os.getenv("REDIS_Q_NAME")
 REDIS_AUDIO_Q_NAME = os.getenv("REDIS_AUDIO_Q_NAME")
 REDIS_SYSTEM_Q_NAME = os.getenv("REDIS_SYSTEM_Q_NAME")
+REDIS_CONTROL_Q_NAME = os.getenv("REDIS_CONTROL_Q_NAME")
 
 r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
 
@@ -27,17 +28,20 @@ r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
 @bot.message_handler(commands=["start"])
 def send_welcome(message):
     markup = types.ReplyKeyboardMarkup(row_width=2)
-    btn1 = types.KeyboardButton("System ℹ️ Info")
+    btn1 = types.KeyboardButton("System 📊 Stats")
     btn2 = types.KeyboardButton("Listen 🎙️ Live")
+    btn3 = types.KeyboardButton("Stop 🛑 Listening")
+    btn4 = types.KeyboardButton("Restart 🔄 Listening")
     markup.add(
         btn1,
         btn2,
+        btn3,
+        btn4,
     )
     bot.send_message(message.chat.id, "Choose an option:", reply_markup=markup)
 
 
 def send_plot(plot_file):
-    print("Sending plot", plot_file)
     bot.send_photo(main_chat_id, plot_file)
 
 
@@ -45,14 +49,24 @@ def send_audio_message(audio, message="Loud noise"):
     bot.send_audio(main_chat_id, audio, message)
 
 
-@bot.message_handler(func=lambda message: message.text == "listen")
+@bot.message_handler(func=lambda message: message.text == "Stop 🛑 Listening")
+def handle_message(message):
+    r.rpush(REDIS_CONTROL_Q_NAME, "stop")
+
+
+@bot.message_handler(func=lambda message: message.text == "Restart 🔄 Listening")
+def handle_message(message):
+    r.rpush(REDIS_CONTROL_Q_NAME, "start")
+
+
+@bot.message_handler(func=lambda message: message.text == "Listen 🎙️ Live")
 def handle_message(message):
     from celeryapps import record_audio
 
     record_audio.delay()
 
 
-@bot.message_handler(func=lambda message: message.text == "stats")
+@bot.message_handler(func=lambda message: message.text == "System 📊 Stats")
 def handle_message(message):
     stats = r.lpop(REDIS_SYSTEM_Q_NAME)
     bot.reply_to(message, json.loads(stats))

@@ -12,6 +12,8 @@ REDIS_PORT = os.getenv("REDIS_PORT")
 REDIS_Q_NAME = os.getenv("REDIS_Q_NAME")
 REDIS_MONITOR_Q_NAME = os.getenv("REDIS_MONITOR_Q_NAME")
 SYSTEM_Q_NAME = os.getenv("SYSTEM_Q_NAME")
+REDIS_CONTROL_Q_NAME = os.getenv("REDIS_CONTROL_Q_NAME")
+
 
 r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
 
@@ -21,6 +23,15 @@ def redis_online():
         return r.ping() is True
     except redis.exceptions.ConnectionError:
         return False
+
+
+def get_control_message():
+    try:
+        message = r.rpop(REDIS_CONTROL_Q_NAME)
+    except redis.ConnectionError:
+        return
+    else:
+        return message
 
 
 def push_system_metrics_to_redis(system_metrics):

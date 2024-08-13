@@ -5,57 +5,36 @@ import sys
 import time
 from typing import Callable
 
-import pyaudio
 import numpy as np
 
 from utils.aws import (
     get_batch_size,
-    get_chunk_size,
-    get_sampling_rate,
     get_listening_duration,
 )
-from utils.redis_q import push_rms_to_redis, push_audio_to_redis, redis_online
+from utils.redis_q import (
+    push_rms_to_redis,
+    push_audio_to_redis,
+    redis_online,
+    get_control_message,
+)
 from dotenv import load_dotenv
 from stream import PyAudioStream
 
 load_dotenv()
 
 REDIS_AUDIO_Q_NAME = os.getenv("REDIS_AUDIO_Q_NAME")
-
-RATE = int(get_sampling_rate())
-CHUNK = int(get_chunk_size())
-
 BATCH_SIZE = int(get_batch_size())
-DEVICE_INDEX = 3
 DURATION = int(get_listening_duration())
 
 
-def get_input_device_options(p: pyaudio.PyAudio):
-    for i in range(p.get_device_count()):
-        name = p.get_device_info_by_index(i)["name"]
-        channels = p.get_device_info_by_index(i)["maxInputChannels"]
-        print(f"Index: {i}, Name: {name}, Channels: {channels}")
+def convert_to_rms(audio_data: np.ndarray) -> float:
+    audio_data = audio_data.astype(np.int32)
+    rms = np.sqrt(np.mean(audio_data**2))
+    return float(rms)
 
 
-def get_device_index(p: pyaudio.PyAudio) -> int:
-    if DEVICE_INDEX:
-        return DEVICE_INDEX
-    print("Choose the device index for recording")
-    get_input_device_options(p)
-    return int(input("Enter the device index: "))
-
-
-def get_duration() -> int:
-    if DURATION:
-        return DURATION
-    print("Choose duration of recording")
-    return int(input("Duration: "))
-
-
-def collect_rms(
-    device_index: int,
+def read_audio_input(
     stream: PyAudioStream,
-    duration: int,
     relay: Callable = None,
     noise_func: Callable = None,
 ):
@@ -63,33 +42,44 @@ def collect_rms(
     rms_for_analysis = []
     stream.open()
 
-    for i in range(0, int(RATE / CHUNK * duration)):
-        data = stream.stream.read(CHUNK)
+    for i in range(0, int(stream.rate / stream.chunk * DURATION)):
+
+        if get_control_message() == b"stop":
+            stream.stream.stop_stream()
+            print("Stopping stream")
+        if get_control_message() == b"start":
+            stream.stream.start_stream()
+            print("Starting stream")
+
+        if stream.stream.is_stopped():
+            continue
+
+        data = stream.stream.read(stream.chunk)
         audio_data = np.frombuffer(data, dtype=np.int16)
 
         if noise_func is not None:
             noise_func(audio_data, REDIS_AUDIO_Q_NAME)
 
-        audio_data = audio_data.astype(np.int32)
-        rms = np.sqrt(np.mean(audio_data**2))
+        rms = convert_to_rms(audio_data)
         rms_values.append(rms)
-        rms_for_analysis.append(float(rms))
+        rms_for_analysis.append(rms)
 
         # This is not good
         if len(rms_for_analysis) == BATCH_SIZE:
             if relay is not None:
-                relay(rms_for_analysis, device_index)
+                relay(rms_for_analysis, stream.device.index)
             if noise_func is not None:
                 noise_func(rms_for_analysis)
             rms_for_analysis.clear()
 
-    stream.close()
+    stream.p.terminate()
 
     return rms_values
 
 
 def launch():
     retries = 0
+
     while not redis_online():
         print("Redis is not online. Waiting for 10 seconds before retrying.")
         time.sleep(10)
@@ -99,11 +89,12 @@ def launch():
             print("Max retries reached. Exiting.")
             sys.exit(1)
 
-    p = pyaudio.PyAudio()
-    device_index = get_device_index(p)
-    duration = get_duration()
-    stream = PyAudioStream(device_index)
-    collect_rms(device_index, stream, duration, push_rms_to_redis, push_audio_to_redis)
+    read_audio_input(
+        stream=stream, relay=push_rms_to_redis, noise_func=push_audio_to_redis
+    )
+
+
+stream = PyAudioStream()
 
 
 if __name__ == "__main__":
