@@ -72,6 +72,15 @@ def handle_message(message):
     bot.reply_to(message, json.loads(stats))
 
 
+@bot.message_handler(func=lambda message: message.text == "Reset 📭 Queues")
+def handle_message(message):
+    r.ltrim(REDIS_Q_NAME, 1, 0)
+    r.ltrim(REDIS_AUDIO_Q_NAME, 1, 0)
+    r.ltrim(REDIS_SYSTEM_Q_NAME, 1, 0)
+    r.ltrim(REDIS_CONTROL_Q_NAME, 1, 0)
+    bot.reply_to(message, "Queues have been reset")
+
+
 if __name__ == "__main__":
     bot.send_message(main_chat_id, "Bot is up and running")
     bot.polling()
