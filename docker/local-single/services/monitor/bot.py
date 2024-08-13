@@ -28,11 +28,11 @@ r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
 @bot.message_handler(commands=["start"])
 def send_welcome(message):
     markup = types.ReplyKeyboardMarkup(row_width=2)
-    btn1 = types.KeyboardButton("System 📊 Stats")
+    btn1 = types.KeyboardButton("Reset  Queues")
+    btn5 = types.KeyboardButton("System 📊 Stats")
     btn2 = types.KeyboardButton("Listen 🎙️ Live")
     btn3 = types.KeyboardButton("Stop 🛑 Listening")
     btn4 = types.KeyboardButton("Restart 🔄 Listening")
-    btn5 = types.KeyboardButton("Reset 📭 Queues")
     markup.add(
         btn1,
         btn2,
