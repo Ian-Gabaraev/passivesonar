@@ -7,6 +7,9 @@ app = Flask(__name__)
 
 @app.route("/", methods=["POST"])
 def webhook():
+    """
+    This function is called when the GitHub webhook is triggered.
+    """
     if request.method == "POST":
         os.system("git -C /home/ian/repos/passivesonar pull")
         os.system(
