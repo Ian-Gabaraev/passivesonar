@@ -30,7 +30,7 @@ def gather_system_metrics():
 def log_system_metrics():
     system_metrics = gather_system_metrics()
     push_system_metrics_to_redis(system_metrics)
-    time.sleep(60)
+    time.sleep(5)
 
 
 if __name__ == "__main__":
