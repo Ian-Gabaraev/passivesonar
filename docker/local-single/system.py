@@ -18,8 +18,8 @@ def gather_system_metrics():
     return f"""
 🌡️CPU Temperature: {get_cpu_temperature()},
 🔋Battery: {get_battery()},
-📊CPU Usage: {get_cpu_usage()}%",
-💾RAM Usage: {get_ram_usage()}%",
+📊CPU Usage: {get_cpu_usage()}%,
+💾RAM Usage: {get_ram_usage()}%,
 ⏱️System Uptime: {get_system_uptime()},
 """
 

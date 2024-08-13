@@ -65,11 +65,13 @@ def send_audio_message(audio, message="Loud noise"):
 @bot.message_handler(func=lambda message: message.text == "Stop 🛑 Listening")
 def handle_message(message):
     r.rpush(REDIS_CONTROL_Q_NAME, "stop")
+    bot.reply_to(message, "Listening has been stopped")
 
 
 @bot.message_handler(func=lambda message: message.text == "Restart 🔄 Listening")
 def handle_message(message):
     r.rpush(REDIS_CONTROL_Q_NAME, "start")
+    bot.reply_to(message, "Listening has been restarted")
 
 
 @bot.message_handler(func=lambda message: message.text == "Listen 🎙️ Live")
