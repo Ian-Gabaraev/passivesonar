@@ -71,7 +71,10 @@ def handle_message(message):
 @bot.message_handler(func=lambda message: message.text == "System 📊 Stats")
 def handle_message(message):
     stats = r.lpop(REDIS_SYSTEM_Q_NAME)
-    bot.reply_to(message, json.loads(stats))
+    if stats:
+        bot.reply_to(message, json.loads(stats))
+    else:
+        bot.reply_to(message, "No system stats available")
 
 
 @bot.message_handler(func=lambda message: message.text == "Reset")
