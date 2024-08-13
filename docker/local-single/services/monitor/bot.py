@@ -27,12 +27,12 @@ r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
 
 @bot.message_handler(commands=["start"])
 def send_welcome(message):
-    markup = types.ReplyKeyboardMarkup(row_width=2)
-    btn1 = types.KeyboardButton("Reset  Queues")
-    btn5 = types.KeyboardButton("System 📊 Stats")
+    markup = types.ReplyKeyboardMarkup(row_width=3)
+    btn1 = types.KeyboardButton("Reset")
     btn2 = types.KeyboardButton("Listen 🎙️ Live")
     btn3 = types.KeyboardButton("Stop 🛑 Listening")
     btn4 = types.KeyboardButton("Restart 🔄 Listening")
+    btn5 = types.KeyboardButton("System 📊 Stats")
     markup.add(
         btn1,
         btn2,
@@ -74,7 +74,7 @@ def handle_message(message):
     bot.reply_to(message, json.loads(stats))
 
 
-@bot.message_handler(func=lambda message: message.text == "Reset 📭 Queues")
+@bot.message_handler(func=lambda message: message.text == "Reset")
 def handle_message(message):
     r.ltrim(REDIS_Q_NAME, 1, 0)
     r.ltrim(REDIS_AUDIO_Q_NAME, 1, 0)
