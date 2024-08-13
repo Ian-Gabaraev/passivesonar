@@ -36,7 +36,7 @@ def get_control_message():
 
 def push_system_metrics_to_redis(system_metrics):
     try:
-        r.rpush(SYSTEM_Q_NAME, json.dumps(system_metrics))
+        r.set("system_metrics", json.dumps(system_metrics), ex=60)
     except redis.ConnectionError:
         print("Redis not connected")
         return

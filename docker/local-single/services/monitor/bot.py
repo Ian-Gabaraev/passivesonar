@@ -70,7 +70,7 @@ def handle_message(message):
 
 @bot.message_handler(func=lambda message: message.text == "System 📊 Stats")
 def handle_message(message):
-    stats = r.lpop(REDIS_SYSTEM_Q_NAME)
+    stats = r.get("system_metrics")
     if stats:
         bot.reply_to(message, json.loads(stats))
     else:
@@ -81,7 +81,6 @@ def handle_message(message):
 def handle_message(message):
     r.ltrim(REDIS_Q_NAME, 1, 0)
     r.ltrim(REDIS_AUDIO_Q_NAME, 1, 0)
-    r.ltrim(REDIS_SYSTEM_Q_NAME, 1, 0)
     r.ltrim(REDIS_CONTROL_Q_NAME, 1, 0)
     bot.reply_to(message, "Queues have been reset")
 
