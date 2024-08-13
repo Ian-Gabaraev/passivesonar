@@ -16,7 +16,7 @@ CHUNK = int(get_chunk_size())
 
 BATCH_SIZE = int(get_batch_size())
 DEVICE_INDEX = 3 or None
-DEVICE = get_device(DEVICE_INDEX)
+DEVICE = get_device(DEVICE_INDEX, CHANNELS, RATE)
 DURATION = int(get_listening_duration())
 
 
