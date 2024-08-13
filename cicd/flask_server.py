@@ -16,6 +16,8 @@ def webhook():
             "docker-compose -f /home/ian/repos/passivesonar/docker/"
             "local-single/services/docker-compose.yml up --build -d"
         )
+        os.system("sudo systemctl restart listen")
+        os.system("sudo systemctl restart systemstats")
         return "Success", 200
     else:
         return "Invalid request", 400
