@@ -6,7 +6,16 @@ import telebot
 from dotenv import load_dotenv
 from telebot import types
 
-from aws import get_tg_bot_key, get_main_chat_id
+from aws import (
+    get_tg_bot_key,
+    get_main_chat_id,
+    get_batch_size,
+    get_listening_duration,
+    get_sampling_rate,
+    get_chunk_size,
+    get_loudness_threshold,
+    get_recording_duration,
+)
 
 load_dotenv()
 
@@ -28,17 +37,19 @@ r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
 @bot.message_handler(commands=["start"])
 def send_welcome(message):
     markup = types.ReplyKeyboardMarkup(row_width=3)
-    btn1 = types.KeyboardButton("Reset")
+    btn1 = types.KeyboardButton("Reset 🫙Queues")
     btn2 = types.KeyboardButton("Listen 🎙️ Live")
     btn3 = types.KeyboardButton("Stop 🛑 Listening")
     btn4 = types.KeyboardButton("Restart 🔄 Listening")
     btn5 = types.KeyboardButton("System 📊 Stats")
+    btn6 = types.KeyboardButton("System ⚙️ Settings")
     markup.add(
         btn1,
         btn2,
         btn3,
         btn4,
-        btn5
+        btn5,
+        btn6,
     )
     bot.send_message(message.chat.id, "Choose an option:", reply_markup=markup)
 
@@ -77,12 +88,25 @@ def handle_message(message):
         bot.reply_to(message, "No system stats available")
 
 
-@bot.message_handler(func=lambda message: message.text == "Reset")
+@bot.message_handler(func=lambda message: message.text == "Reset 🫙Queues")
 def handle_message(message):
     r.ltrim(REDIS_Q_NAME, 1, 0)
     r.ltrim(REDIS_AUDIO_Q_NAME, 1, 0)
     r.ltrim(REDIS_CONTROL_Q_NAME, 1, 0)
     bot.reply_to(message, "Queues have been reset")
+
+
+@bot.message_handler(func=lambda message: message.text == "System ⚙️ Settings")
+def handle_message(message):
+    settings = f"""
+Batch Size: {get_batch_size()}
+Listening Duration: {get_listening_duration()} sec
+Sampling Rate: {get_sampling_rate()} Hz
+Chunk Size: {get_chunk_size()}
+Loudness Threshold: {get_loudness_threshold()}
+Recording Duration: {get_recording_duration()} sec
+"""
+    bot.reply_to(message, settings)
 
 
 if __name__ == "__main__":

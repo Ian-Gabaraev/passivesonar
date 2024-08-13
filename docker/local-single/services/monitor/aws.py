@@ -15,7 +15,7 @@ log_group_name = "sonar"
 log_stream_name = "sonarlogstream"
 
 
-def sed_log(log_message):
+def send_log(log_message):
     client = boto3.client("logs", region_name=aws_region)
     response = client.describe_log_streams(
         logGroupName=log_group_name, logStreamNamePrefix=log_stream_name
