@@ -32,11 +32,13 @@ def send_welcome(message):
     btn2 = types.KeyboardButton("Listen 🎙️ Live")
     btn3 = types.KeyboardButton("Stop 🛑 Listening")
     btn4 = types.KeyboardButton("Restart 🔄 Listening")
+    btn5 = types.KeyboardButton("Reset 📭 Queues")
     markup.add(
         btn1,
         btn2,
         btn3,
         btn4,
+        btn5
     )
     bot.send_message(message.chat.id, "Choose an option:", reply_markup=markup)
 
