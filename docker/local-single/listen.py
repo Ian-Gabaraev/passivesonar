@@ -43,11 +43,11 @@ def read_audio_input(
     stream.open()
 
     for i in range(0, int(stream.rate / stream.chunk * DURATION)):
-
-        if get_control_message() == b"stop":
+        control_message = get_control_message()
+        if control_message == b"stop":
             stream.stream.stop_stream()
             print("Stopping stream")
-        if get_control_message() == b"start":
+        if control_message == b"start":
             stream.stream.start_stream()
             print("Starting stream")
 
