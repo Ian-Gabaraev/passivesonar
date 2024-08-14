@@ -63,8 +63,8 @@ def get_redis_info():
     return (
         f"🔌 Connected clients: {info['connected_clients']}\n"
         f"📈 Total commands processed: {info['total_commands_processed']}\n"
-        f"⬆️  Total input: {info['total_net_input_bytes']} bytes\n"
-        f"⬇️  Total output: {info['total_net_output_bytes']} bytes\n"
+        f"⬆️ Total input: {info['total_net_input_bytes']} bytes\n"
+        f"⬇️ Total output: {info['total_net_output_bytes']} bytes\n"
         f"💾 Used memory: {info['used_memory_human']}\n"
         f"🕒 Uptime: {info['uptime_in_seconds']} seconds"
     )
@@ -92,11 +92,12 @@ def handle_message(message):
     system_q_len = r.llen(REDIS_SYSTEM_Q_NAME)
     monitor_len = r.llen(REDIS_MONITOR_Q_NAME)
     reply = f"""
+Unprocessed messages in queues:
+📮 Main Queue: {q_len} messages
 🔊 Audio Queue: {audio_q_len} messages
 🎛️ Control Queue: {control_q_len} messages
 💻 Host Queue: {system_q_len} messages
 🎼 Monitor Queue: {monitor_len} messages
-🎩 Main Queue: {q_len} messages
 
 Details:
 {get_redis_info()}
