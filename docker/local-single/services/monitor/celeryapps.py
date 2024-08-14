@@ -51,6 +51,13 @@ def calculate_chunks_per_second(sample_rate, chunk_size):
 
 
 @app.task
+def send_log_to_cw(message):
+    from aws import send_log
+
+    send_log(message)
+
+
+@app.task
 def record_audio(seconds=RECORDING_DURATION, message=None):
     recording = Recording()
     recording.start()

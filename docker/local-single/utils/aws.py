@@ -18,6 +18,31 @@ aws_sqs_queue_url = os.getenv("AWS_SQS_QUEUE_URL")
 aws_region = os.getenv("AWS_REGION")
 bucket_name = os.getenv("AWS_S3_BUCKET")
 s3_filename = f"{datetime.datetime.now()}-report.csv"
+log_group_name = "sonar"
+log_stream_name = "sonarlogstream"
+
+
+def send_log(log_message):
+    client = boto3.client("logs", region_name=aws_region)
+    response = client.describe_log_streams(
+        logGroupName=log_group_name, logStreamNamePrefix=log_stream_name
+    )
+    sequence_token = response["logStreams"][0].get("uploadSequenceToken")
+    log_event = {
+        "logGroupName": log_group_name,
+        "logStreamName": log_stream_name,
+        "logEvents": [
+            {
+                "timestamp": int(datetime.datetime.now().timestamp() * 1000),
+                "message": log_message,
+            }
+        ],
+    }
+
+    if sequence_token:
+        log_event["sequenceToken"] = sequence_token
+
+    client.put_log_events(**log_event)
 
 
 def get_batch_size():

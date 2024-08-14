@@ -58,6 +58,18 @@ def send_welcome(message):
     bot.send_message(message.chat.id, "Choose an option:", reply_markup=markup)
 
 
+def get_redis_info():
+    info = r.info()
+    return (
+        f"🔌 Connected clients: {info['connected_clients']}\n"
+        f"📈 Total commands processed: {info['total_commands_processed']}\n"
+        f"⬆️  Total input: {info['total_net_input_bytes']} bytes\n"
+        f"⬇️  Total output: {info['total_net_output_bytes']} bytes\n"
+        f"💾 Used memory: {info['used_memory_human']}\n"
+        f"🕒 Uptime: {info['uptime_in_seconds']} seconds"
+    )
+
+
 def send_plot(plot_file):
     bot.send_photo(main_chat_id, plot_file)
 
@@ -85,6 +97,9 @@ def handle_message(message):
 💻 Host Queue: {system_q_len} messages
 🎼 Monitor Queue: {monitor_len} messages
 🎩 Main Queue: {q_len} messages
+
+Details:
+{get_redis_info()}
 """
     bot.reply_to(message, reply)
 
