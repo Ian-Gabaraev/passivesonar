@@ -83,7 +83,7 @@ def handle_message(message):
 🔊 Audio Queue: {audio_q_len} messages
 🎛️ Control Queue: {control_q_len} messages
 💻 Host Queue: {system_q_len} messages
-?? Monitor Queue: {monitor_len} messages
+🎼 Monitor Queue: {monitor_len} messages
 🎩 Main Queue: {q_len} messages
 """
     bot.reply_to(message, reply)
