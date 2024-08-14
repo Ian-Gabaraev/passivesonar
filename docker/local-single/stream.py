@@ -1,3 +1,5 @@
+import os
+
 import pyaudio
 
 from utils.aws import (
@@ -8,6 +10,10 @@ from utils.aws import (
 )
 
 from utils.devices import get_device, InputDevice
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
@@ -15,7 +21,7 @@ RATE = int(get_sampling_rate())
 CHUNK = int(get_chunk_size())
 
 BATCH_SIZE = int(get_batch_size())
-DEVICE_INDEX = 3 or None
+DEVICE_INDEX = os.getenv("DEVICE_INDEX", None)
 DEVICE = get_device(DEVICE_INDEX, CHANNELS, RATE)
 DURATION = int(get_listening_duration())
 
