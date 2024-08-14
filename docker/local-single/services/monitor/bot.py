@@ -30,6 +30,8 @@ REDIS_Q_NAME = os.getenv("REDIS_Q_NAME")
 REDIS_AUDIO_Q_NAME = os.getenv("REDIS_AUDIO_Q_NAME")
 REDIS_SYSTEM_Q_NAME = os.getenv("REDIS_SYSTEM_Q_NAME")
 REDIS_CONTROL_Q_NAME = os.getenv("REDIS_CONTROL_Q_NAME")
+REDIS_MONITOR_Q_NAME = os.getenv("REDIS_MONITOR_Q_NAME")
+
 
 r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
 
@@ -76,10 +78,12 @@ def handle_message(message):
     audio_q_len = r.llen(REDIS_AUDIO_Q_NAME)
     control_q_len = r.llen(REDIS_CONTROL_Q_NAME)
     system_q_len = r.llen(REDIS_SYSTEM_Q_NAME)
+    monitor_len = r.llen(REDIS_MONITOR_Q_NAME)
     reply = f"""
 🔊 Audio Queue: {audio_q_len} messages
 🎛️ Control Queue: {control_q_len} messages
 💻 Host Queue: {system_q_len} messages
+?? Monitor Queue: {monitor_len} messages
 🎩 Main Queue: {q_len} messages
 """
     bot.reply_to(message, reply)
