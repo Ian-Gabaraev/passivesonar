@@ -40,11 +40,13 @@ def send_welcome(message):
     btn1 = types.KeyboardButton("Reset 🫙Queues")
     btn2 = types.KeyboardButton("Listen 🎙️ Live")
     btn3 = types.KeyboardButton("Stop 🛑 Listening")
-    btn4 = types.KeyboardButton("Restart 🔄 Listening")
+    btn4 = types.KeyboardButton("Start 🟢 Listening")
     btn5 = types.KeyboardButton("System 📊 Stats")
     btn6 = types.KeyboardButton("System ⚙️ Settings")
+    btn7 = types.KeyboardButton("Queues 📮 Load")
     markup.add(
         btn1,
+        btn7,
         btn2,
         btn3,
         btn4,
@@ -68,7 +70,22 @@ def handle_message(message):
     bot.reply_to(message, "Listening has been stopped")
 
 
-@bot.message_handler(func=lambda message: message.text == "Restart 🔄 Listening")
+@bot.message_handler(func=lambda message: message.text == "Queues 📮 Load")
+def handle_message(message):
+    q_len = r.llen(REDIS_Q_NAME)
+    audio_q_len = r.llen(REDIS_AUDIO_Q_NAME)
+    control_q_len = r.llen(REDIS_CONTROL_Q_NAME)
+    system_q_len = r.llen(REDIS_SYSTEM_Q_NAME)
+    reply = f"""
+🔊 Audio Queue: {audio_q_len} messages
+🎛️ Control Queue: {control_q_len} messages
+💻 Host Queue: {system_q_len} messages
+🎩 Main Queue: {q_len} messages
+"""
+    bot.reply_to(message, reply)
+
+
+@bot.message_handler(func=lambda message: message.text == "Start 🟢 Listening")
 def handle_message(message):
     r.rpush(REDIS_CONTROL_Q_NAME, "start")
     bot.reply_to(message, "Listening has been restarted")
