@@ -52,6 +52,7 @@ def read_audio_input(
             print("Starting stream")
 
         if stream.stream.is_stopped():
+            time.sleep(5)
             continue
 
         data = stream.stream.read(stream.chunk)
