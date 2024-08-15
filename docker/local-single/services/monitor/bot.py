@@ -6,16 +6,7 @@ import telebot
 from dotenv import load_dotenv
 from telebot import types
 
-from aws import (
-    get_tg_bot_key,
-    get_main_chat_id,
-    get_batch_size,
-    get_listening_duration,
-    get_sampling_rate,
-    get_chunk_size,
-    get_loudness_threshold,
-    get_recording_duration,
-)
+from aws import get_tg_bot_key, get_main_chat_id, get_remote_settings
 
 load_dotenv()
 
@@ -137,14 +128,7 @@ def handle_message(message):
 
 @bot.message_handler(func=lambda message: message.text == "System ⚙️ Settings")
 def handle_message(message):
-    settings = f"""
-Batch Size: {get_batch_size()}
-Listening Duration: {get_listening_duration()} sec
-Sampling Rate: {get_sampling_rate()} Hz
-Chunk Size: {get_chunk_size()}
-Loudness Threshold: {get_loudness_threshold()}
-Recording Duration: {get_recording_duration()} sec
-"""
+    settings = get_remote_settings()
     bot.reply_to(message, settings)
 
 

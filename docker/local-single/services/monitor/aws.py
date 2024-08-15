@@ -38,6 +38,25 @@ def send_log(log_message):
     client.put_log_events(**log_event)
 
 
+def get_remote_settings():
+    ssm = boto3.client("ssm")
+    parameter_names = [
+        "BatchSize",
+        "RecordingDurationSec",
+        "LoudnessUpperLimitRMS",
+        "LoudNoiseStreakUpperLimit",
+        "AudioQSizeUpperLimit",
+        "ChunkSize",
+        "ListeningDurationSec",
+        "SamplingRateHZ",
+    ]
+    response = ssm.get_parameters(Names=parameter_names, WithDecryption=True)
+
+    params = {param["Name"]: param["Value"] for param in response["Parameters"]}
+
+    return "\n".join(f"{key}: {value}" for key, value in params.items())
+
+
 def get_batch_size():
     ssm = boto3.client("ssm")
     parameter_name = "BatchSize"
