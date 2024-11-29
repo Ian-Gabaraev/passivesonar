@@ -25,6 +25,7 @@ importlib_resources==6.4.0
 jmespath==1.0.1
 kiwisolver==1.4.5
 kombu==5.3.7
+librosa==0.10.2.post1
 matplotlib==3.9.1
 mypy-extensions==1.0.0
 numpy==2.0.1
