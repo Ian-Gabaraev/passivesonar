@@ -32,7 +32,7 @@ class AmplitudeEnvelope:
         return t
 
     def plot(self):
-        plt.figure(figsize=(10, 5))
+        plt.figure(figsize=(self.duration // 2, 5))
         plt.style.use("dark_background")
         plt.grid(color="gray", linestyle="--", linewidth=0.5, alpha=0.5)
         plt.title("Amplitude Envelope", color="white", fontsize=16, fontname="Ubuntu")
